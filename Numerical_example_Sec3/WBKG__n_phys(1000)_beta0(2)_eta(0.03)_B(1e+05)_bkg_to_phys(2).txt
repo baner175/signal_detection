@@ -1,0 +1,2 @@
+"beta_est" "beta(2)" "uniform_bkg"
+0.71638 0.71464 0.71387
