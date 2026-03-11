@@ -26,8 +26,6 @@ fb_true <- function(x) dtrunc(x, a = l, b = u, spec = 'gamma',
 # true mixture density
 f <- function(x) eta_true*fs(x)+(1-eta_true)*fb_true(x)
 
-# beta0 <- 3.87
-# or
 beta0 <- 4
 qb <- function(x, beta = beta0){
   dtrunc(x, spec = 'pareto', a = l, b = u,
@@ -43,10 +41,6 @@ delta_vs_eps <- function(eps){
   return(integrate(function(x) S1(x)*fb_true(x), l, u)$value)
 }
 delta_vs_eps <- Vectorize(delta_vs_eps)
-curve(delta_vs_eps, 0, 0.02, lwd = 4)
-abline(h = 0, lty = 2, col = 'red', lwd = 4)
-
-
 eps_seq <- c(0, 0.005, 0.01)
 delta_vals <- sapply(eps_seq, delta_vs_eps)
 
@@ -64,18 +58,19 @@ for(i in 1:length(eps_seq)){
         lwd = 4, lty = my_lty[i],
         add = TRUE)
 }
-legend(x = 1.2, y = 4,
+legend(x = 1.1, y = 4,
        legend = c(
-         TeX('$f_b(x);$'),
-         TeX('$q(x);$'),
-         TeX(sprintf('$\\tilde{g}(x, \\epsilon = %.4f);$', eps_seq[-1]))
+         TeX('$f_b;$'),
+         TeX('$\\tilde{g}(\\epsilon = 0) \\equiv q;$'),
+         TeX(sprintf('$\\tilde{g}(\\epsilon = %.4f);$', eps_seq[-1]))
        ),
        col = c('black', my_cols),
        lty = c(1, my_lty),
        bty = 'n',
        lwd = 4,
+       seg.len = 2,
        y.intersp = 1.5, cex = 2)
-legend(x = 1.62, y = 4,
+legend(x = 1.6, y = 4,
        legend = TeX(sprintf('$\\tilde{\\delta} = %.5f $', c(0, round(delta_vals, 3)))),
        bty = 'n',
        y.intersp = 1.5, cex = 2)
