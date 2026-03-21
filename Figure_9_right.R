@@ -78,8 +78,6 @@ lambda_seq <- c(0, 0.01, 0.03, 0.05, 0.07)
 ######### Plotting Densities ###################################################
 
 g <- function(y, lambda){
-  fs <- dtrunc(exp(y), spec = 'norm', a = real_l, b = real_u,
-               mean = mean_sig, sd = sd_sig)*exp(y)
   q <- q(y)
   fs_val1 <- dtrunc(y, spec = 'norm', a = l, b = u,
                     mean = mean1_in_gb, sd = sd_in_gb)
