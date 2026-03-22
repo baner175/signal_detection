@@ -12,7 +12,7 @@ l <- log(real_l); u <- log(real_u)
 
 mean_sig <- 3.5; sd_sig <- sqrt(0.01*3.5^2)
 eps <- 1e-3
-mu_in_qb <- -1; sigma_factor_in_qb <- 2
+mu_in_g <- -1; sigma_factor_in_g <- 2
 
 # SIGNAL DENSITY:
 fs <- function(x, mean = mean_sig, sd = sd_sig)
@@ -40,8 +40,8 @@ m <- length(y)
 
 g_gauss_model <- function(beta){
   gi <- dtrunc(y, spec = 'norm',
-               mean = mu_in_qb,
-               sd = sqrt(sigma_factor_in_qb*beta),
+               mean = mu_in_g,
+               sd = sqrt(sigma_factor_in_g*beta),
                a = l, b = u)
   return(-sum(log(gi)))
 }
@@ -51,8 +51,8 @@ bth_g_gauss <- nlminb(start = 0.01,
                       upper = 10, lower = 0)$par
 
 g_gauss <- function(x) dtrunc(x, spec = 'norm',
-                              mean = mu_in_qb,
-                              sd = sqrt(sigma_factor_in_qb*bth_g_gauss),
+                              mean = mu_in_g,
+                              sd = sqrt(sigma_factor_in_g*bth_g_gauss),
                               a = l, b = u)
 g_gauss <- Vectorize(g_gauss)
 

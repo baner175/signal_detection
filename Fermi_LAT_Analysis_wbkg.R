@@ -96,11 +96,11 @@ sig_hat_exp <- test_denom/(sqrt(m+n))
 std_err_exp <- sig_hat_exp*sqrt((m+n)/(m*n))
 ci_95_exp <- eta_hat_exp + c(-1,1)*qnorm(0.975)*std_err_exp
 ######## GAUSSIAN TAIL MODEL ###################################################
-mu_in_qb <- -1; sigma_factor_in_qb <- 2
+mu_in_g <- -1; sigma_factor_in_g <- 2
 g_model <- function(beta){
   gi <- dtrunc(y, spec = 'norm',
-               mean = mu_in_qb,
-               sd = sqrt(sigma_factor_in_qb*beta),
+               mean = mu_in_g,
+               sd = sqrt(sigma_factor_in_g*beta),
                a = l, b = u)
   return(-sum(log(gi)))
 }
@@ -108,11 +108,11 @@ beta_hat <- nlminb(start = 0.01,
                    objective = g_model,
                    upper = Inf, lower = 0)$par
 g <- function(t) dtrunc(t, spec = 'norm',
-                        mean = mu_in_qb,
-                        sd = sqrt(sigma_factor_in_qb*beta_hat),
+                        mean = mu_in_g,
+                        sd = sqrt(sigma_factor_in_g*beta_hat),
                         a = l, b = u)
-d_log_h <- function(t) ((t-mu_in_qb)^2)/(2*sigma_factor_in_qb*(beta_hat^2))
-d2_log_h <- function(t) (-(t-mu_in_qb)^2)/(sigma_factor_in_qb*(beta_hat^3))
+d_log_h <- function(t) ((t-mu_in_g)^2)/(2*sigma_factor_in_g*(beta_hat^2))
+d2_log_h <- function(t) (-(t-mu_in_g)^2)/(sigma_factor_in_g*(beta_hat^3))
 E_g_d_log_h <- integrate(function(t) d_log_h(t)*g(t), l, u)$value
 d2_log_g_int_1 <- integrate(function(y){
   d2_log_h <- d2_log_h(y)
