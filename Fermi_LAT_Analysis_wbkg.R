@@ -28,7 +28,7 @@ g_model <- function(beta){
 }
 beta_hat <- nlminb(start = 0.01,
                    objective = g_model,
-                   upper = Inf, lower = -Inf)$par
+                   upper = 10, lower = 0)$par
 # Defining proposal background g at MLE beta_hat:
 g <- function(x) dtrunc(x, spec = 'exp', rate = beta_hat, a = l, b = u)
 
@@ -106,7 +106,7 @@ g_model <- function(beta){
 }
 beta_hat <- nlminb(start = 0.01,
                    objective = g_model,
-                   upper = Inf, lower = 0)$par
+                   upper = 10, lower = 0)$par
 g <- function(t) dtrunc(t, spec = 'norm',
                         mean = mu_in_g,
                         sd = sqrt(sigma_factor_in_g*beta_hat),

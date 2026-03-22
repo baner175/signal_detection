@@ -68,7 +68,7 @@ q_model <- function(alpha){
 }
 alpha_hat <- nlminb(start = 0.01,
                    objective = q_model,
-                   upper = Inf, lower = 0)$par # MLE of alpha
+                   upper = 10, lower = 0)$par # MLE of alpha
 
 # defining q_alpha at MLE:
 q <- function(x) {
