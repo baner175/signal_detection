@@ -98,7 +98,7 @@ d_log_h <- function(t) -log(t+1)
 E_q_d_log_h <- integrate(function(t) d_log_h(t)*q(t), l, u)$value
 d_log_q <- function(t) d_log_h(t) - E_q_d_log_h
 d2_log_q_int1 <- integrate(function(t) {
-  ((log(t+1))^2)*q(t)
+  (d_log_h(t)^2)*q(t)
 }, l, u)$value
 d2_log_q <- -d2_log_q_int1 + E_q_d_log_h^2
 signal_search <- function(lambda){
