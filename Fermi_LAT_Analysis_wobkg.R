@@ -12,7 +12,6 @@ rm(list = ls())
 ####################### Loading the required packages ##########################
 library(VGAM)
 library(truncdist)
-library(knitr)
 ################################################################################
 
 # Loading the data and transforming into log-scale
