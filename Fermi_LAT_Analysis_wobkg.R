@@ -122,7 +122,7 @@ signal_search <- function(lambda){
     g <- g(y, lambda = lambda)
     d_log_q <- d_log_q(y)
     return(((fs/g)^2)*q*d_log_q)
-  }, l, u)$value # derivative of ||S||_G w.r.t. \alpha
+  }, l, u)$value # derivative of (||S||_G)^2 w.r.t. \alpha
   
   d_S0_vec <- sapply(y, function(y){ # Evaluating d_alpha_S0 on the physics data
     fs <- fs(y)
@@ -141,8 +141,8 @@ signal_search <- function(lambda){
       (2/J_hat)*d_theta0*
       mean(S0_vec*d_log_q_vec)
   )
-  theta0_stat <- sqrt(n)*(theta0_hat-0)/sig_theta0_hat
-  p_val <- pnorm(theta0_stat, lower.tail = FALSE)
+  theta0_stat <- sqrt(n)*(theta0_hat-0)/sig_theta0_hat # test statistic
+  p_val <- pnorm(theta0_stat, lower.tail = FALSE) # p-value
   return(c(theta0_hat,
            p_val))
 }

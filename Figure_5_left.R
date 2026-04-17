@@ -16,15 +16,15 @@ fs <- function(x, mean = mean_sig) dtrunc(x, a = l, b = u, spec = 'norm', mean =
 
 #parameter for the true background
 bkg_rate <- 3.3; bkg_shape <- 0.5
-
 # true bkg density
-fb_true <- function(x) dtrunc(x, a = l, b = u, spec = 'gamma',
+fb <- function(x) dtrunc(x, a = l, b = u, spec = 'gamma',
                               rate = bkg_rate, shape = bkg_shape)
-gb <- function(x, beta){
+g <- function(x, beta){
   dtrunc(x, spec = 'pareto', a = l, b = u,
          scale = l, shape = beta)
 }
 
+# Expected log-likelihood under F_b
 neg_E_fb_log_gb <- function(beta)
 {
   return(
@@ -37,19 +37,17 @@ neg_E_fb_log_gb <- function(beta)
     }, l, u)$value 
   )
 }
-
+# finding minimizer of KL divergence between F_b and G_\beta
 beta_star <- nlminb(0.01, neg_E_fb_log_gb)$par
 
+# generating the plot
 op <- par(no.readonly = TRUE)
 par(mgp = c(2.5, 0.8, 0))
-
-curve(fb_true, from = l, to = u, lwd = 4, lty = 1, col = 'black',
-      xlab = 'x', ylab = 'Density', cex.axis = 2, cex.lab = 2)
-curve(gb(x, beta = beta_star), col = 'blue', lwd = 4, lty = 2, add = TRUE)
-curve(gb(x, beta = 2), col = 'brown', lwd = 4, lty = 4, add = TRUE)
-curve(dunif(x, l, u), col = 'red', lwd = 4, lty = 3, add = TRUE)
-
-
+curve(fb, from = l, to = u, lwd = 4, lty = 1, col = 'black',
+      xlab = 'x', ylab = 'Density', cex.axis = 2, cex.lab = 2) # plotting fb truth
+curve(g(x, beta = beta_star), col = 'blue', lwd = 4, lty = 2, add = TRUE) # plotting gb at beta_star
+curve(g(x, beta = 2), col = 'brown', lwd = 4, lty = 4, add = TRUE) # plotting gb at fixed beta = 2
+curve(dunif(x, l, u), col = 'red', lwd = 4, lty = 3, add = TRUE) # plotting uniform proposal background
 legend('top',
        legend = c(
          TeX('$f_b(x)$'),

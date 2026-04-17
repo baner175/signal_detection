@@ -2,16 +2,15 @@ rm(list = ls())
 
 library(latex2exp)
 
-# WITH BKG ONLY SAMPLE ##########################################
-
-# beta estimated:
+# parameters to retrieve simulation results
 B <- 1e5
 bkg_to_phys_ratio <- 2
 n_seq <- c(50, 250, 5e2, 1e3, 2e3)
-beta0 <- 2
+beta0 <- 2 # fixed value of the parameter beta
 
-eta <- 0.03
+eta <- 0.03 # eta = 0 for Fig 5 (right) and change to 0.01, 0.02 or 0.03 to generate Fig 6
 
+# generating the plots:
 transp <- 0.8
 op <- par(no.readonly = TRUE)
 par(mgp = c(2.5, 0.8, 0))
@@ -51,8 +50,8 @@ if(eta == 0){
          col = 'grey')
 }
 
+# reading files containing the empiricial powers
 pow_res <- c()
-
 for(n in n_seq){
   file_name <- paste0('Numerical_example_Sec3/',
                       'WBKG__',
@@ -65,25 +64,25 @@ for(n in n_seq){
   pow_res <- rbind(pow_res, pow)
 }
 
-# beta estimated:
+# power curve when beta estimated:
 lines(x = n_seq, y = pow_res[,1], lty = 2, lwd = 4,
       col = ggplot2::alpha('blue', transp))
 points(x = n_seq, y = pow_res[,1], cex = 2,
        col = ggplot2::alpha('blue', transp), lwd = 4, pch = 16)
 
-
-# beta known:
+# power curve when beta is fixed at btea0 = 2:
 lines(x = n_seq, y = pow_res[,2], lty = 4, lwd = 4, 
       col = ggplot2::alpha('brown', transp))
 points(x = n_seq, y = pow_res[,2], cex = 2,
        col = ggplot2::alpha('brown', transp), lwd = 4, pch = 17)
 
-# unif bkg:
+# power curve when proposal background is uniform:
 lines(x = n_seq, y = pow_res[,3], lty = 3, lwd = 4,
       col = ggplot2::alpha('red', transp))
 points(x = n_seq, y = pow_res[,3], cex = 2,
        col = ggplot2::alpha('red', transp), lwd = 4, pch = 18)
 
+# Creating legends
 if(eta == 0 || eta == 0.01){
   legend('topleft',
          legend = c(
