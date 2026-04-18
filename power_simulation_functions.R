@@ -338,9 +338,9 @@ sim_power_wobkg <- function(eta, n_phys, lambda,
   ####################### DESCRIPTION OF ARGUMENTS #############################
   # eta: true value of eta for simulation
   # n_phys: Size of the physics data
-  # mean1_in_g: location of the first gaussian component in g
-  # mean2_in_g: location of the second gaussian component in g
-  # sd_in_g: scale parameter for the gaussian components in g
+  # mean1_in_g: location of the first Gaussian component in g
+  # mean2_in_g: location of the second Gaussian component in g
+  # sd_in_g: scale parameter for the Gaussian components in g
   # nsims: number of iterations
   # seed: seed for reproducibility
   # signif.level: significance level for the test

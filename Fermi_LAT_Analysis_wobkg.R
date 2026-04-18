@@ -77,8 +77,8 @@ q <- function(x) {
 
 # constructing the proposal background g:
 # means of the Gaussian components to mix with q_\alpha
-mean1_in_g <- (M_lower + log(mean_sig))/2 
-mean2_in_g <- (M_upper + log(mean_sig))/2
+mean1_in_g <- (M_lower + log(mean_sig))/2 # location of the first Gaussian component in g
+mean2_in_g <- (M_upper + log(mean_sig))/2 # location of the second Gaussian component in g
 sig_fs <- sqrt(integrate(function(x) {(x^2)*fs(x)}, l, u)$value - integrate(function(x) {(x)*fs(x)}, l, u)$value^2)
 sig_0 <- 3*sig_fs # SD for the Gaussian components
 

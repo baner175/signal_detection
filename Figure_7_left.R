@@ -1,24 +1,22 @@
 rm(list = ls())
+# loading necessaty libraries
 library(truncdist)
 library(VGAM)
-library(doSNOW)
-library(parallel)
-library(foreach)
-library(optparse)
 library(latex2exp)
-l <- 1; u <- 2
+l <- 1; u <- 2 # search region
 #parameters for the signal
 mean_sig <- 1.28
 sd_sig <- 0.02
-eta_true <- 0.02
+eta <- 0.02 # true value of eta in f
 
-eps <- 1e-3; beta <- 4
+eps <- 1e-3 # 1 - mass of the signal region
+alpha <- 4 # candidate value for the parameter in the benchmark model q_\alpha
 
-# signal density
-fs <- function(x, mean = mean_sig) dtrunc(x, a = l, b = u, spec = 'norm', mean = mean, sd = sd_sig)
-Fs <- function(x) ptrunc(x, a = l, b = u, spec = 'norm', mean = mean_sig, sd = sd_sig)
+# signal density and CDF
+fs <- function(x, mean = mean_sig) dtrunc(x, a = l, b = u, spec = 'norm', mean = mean, sd = sd_sig) # pdf
+Fs <- function(x) ptrunc(x, a = l, b = u, spec = 'norm', mean = mean_sig, sd = sd_sig) # CDF
 
-# Figuring out (mu_s -d, mu_s + d) that covers an area of 1-eps:
+# Figuring out (mu_s - d, mu_s + d) that covers an area of 1-eps:
 find_d <- function(d)
 {
   pl <- Fs(mean_sig-d)
@@ -27,47 +25,53 @@ find_d <- function(d)
 }
 sol <- uniroot(find_d, lower = 0, upper = min(mean_sig - l,u - mean_sig))
 r <- sol$root
-M_lower <- mean_sig - r; M_upper <- mean_sig + r
+M_lower <- mean_sig - r # mu_s - d
+M_upper <- mean_sig + r # mu_s + d
 
 #parameter for the true background
 bkg_rate <- 3.3; bkg_shape <- 0.5
-
 # true bkg density
-fb_true <- function(x) dtrunc(x, a = l, b = u, spec = 'gamma',
-                              rate = bkg_rate, shape = bkg_shape)
-f_true <- function(x) eta_true*fs(x)+(1-eta_true)*fb_true(x)
-qb <- function(x){
+fb <- function(x) dtrunc(x, a = l, b = u, spec = 'gamma',
+                         rate = bkg_rate, shape = bkg_shape)
+# data generating density f
+f <- function(x) eta*fs(x)+(1-eta)*fb(x)
+
+# benchmark model density:
+q <- function(x){
   dtrunc(x, spec = 'pareto', a = l, b = u,
-         scale = l, shape = beta0)
+         scale = l, shape = alpha)
 }
 
-mean1_in_gb <- 0.5*M_lower + 0.5*mean_sig; sd_in_gb <- 4*sd_sig
-mean2_in_gb <- 0.4*M_upper + 0.6*mean_sig
+mean1_in_g <- 0.5*M_lower + 0.5*mean_sig # location of the first Gaussian component in g
+mean2_in_g <- 0.4*M_upper + 0.6*mean_sig # location of the second Gaussian component in g
+sd_in_g <- 4*sd_sig # scale parameter for the Gaussian components in g
 
-gb <- function(x, lambda) {
-  fs_val1 <- dtrunc(x, mean = mean1_in_gb, sd = sd_in_gb,
-                    a = l, b = u,
-                    spec = 'norm')
-  fs_val2 <-  dtrunc(x, mean = mean2_in_gb, sd = sd_in_gb,
-                     a = l, b = u,
-                     spec = 'norm')
-  qb <- dtrunc(x, spec = 'pareto', a = l, b = u,
-               scale = l, shape = beta)
-  
-  return(lambda*(fs_val1+fs_val2) + (1-2*lambda)*qb)
+# proposal background with dominating component on top of the benchmark model
+g <- function(x, lambda) {
+  phi1 <- dtrunc(x, mean = mean1_in_g, sd = sd_in_g,
+                 a = l, b = u,
+                 spec = 'norm')
+  phi2 <-  dtrunc(x, mean = mean2_in_g, sd = sd_in_g,
+                  a = l, b = u,
+                  spec = 'norm')
+  q <- dtrunc(x, spec = 'pareto', a = l, b = u,
+              scale = l, shape = alpha)
+  return(lambda*(phi1+phi2) + (1-2*lambda)*q)
 }
+
+# Creating the plot:
 op <- par(no.readonly = TRUE)
 par(mar = c(5, 5, 4, 2))
-curve(f_true, from = 1.1, to = 1.6, col = 'orange', lwd = 5,
+curve(f, from = 1.1, to = 1.6, col = 'orange', lwd = 5,
       ylab = 'Density', xlab = 'x', lty = 2,
       cex.axis = 2, cex.lab = 2)
-curve(fb_true, add = TRUE, col = 'black', lwd = 4, lty = 1,
+curve(fb, add = TRUE, col = 'black', lwd = 4, lty = 1,
       ylab = '', xlab = 'x')
-curve(gb(x, 0), add = TRUE, col = 'blue', lwd = 4, lty = 2,
-      ylab = '', xlab = 'x')
-curve(gb(x, 0.03), add = TRUE, col = 'purple', lwd = 4, lty = 4,
-      ylab = '', xlab = 'x')
-
+curve(g(x, 0), add = TRUE, col = 'blue', lwd = 4, lty = 2,
+      ylab = '', xlab = 'x') # same as plotting q
+curve(g(x, 0.03), add = TRUE, col = 'purple', lwd = 4, lty = 4,
+      ylab = '', xlab = 'x') # plotting g with a visible dominating component
+# creating the legend
 legend(x = 1.26, y = 2.6, legend = TeX('$g_{\\beta}(x; \\lambda = 0.03)$'), 
        col = 'purple', lwd = 4, lty = 4,
        bty = 'n', cex = 2,
@@ -84,6 +88,7 @@ legend(x = 1.26, y = 2, legend = TeX('$f_b(x)$'),
        col = 'black', lwd = 4, lty = 1,
        bty = 'n', cex = 2,
        seg.len = 2.2)
+# highlighting the signal region
 abline(v = c(M_lower, M_upper), col = ggplot2::alpha('grey', 0.5), lwd = 4, lty = 2)
 rect(
   xleft   = M_lower,
