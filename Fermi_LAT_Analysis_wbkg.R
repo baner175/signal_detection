@@ -87,7 +87,7 @@ d_S0 <- function(t){ # derivative of S_0 w.r.t. \beta
   d_log_g <- (1/beta_hat) - t - 
     (u*exp(-beta_hat*u) - l*exp(-beta_hat*l))/(exp(-beta_hat*l) - exp(-beta_hat*u))
   
-  return(-((norm_S^2)*(fs/g)*g*d_log_g + (fs/g-1)*d_normS_sq)/(norm_S^4))
+  return(-((norm_S^2)*(fs/g)*d_log_g + (fs/g-1)*d_normS_sq)/(norm_S^4))
 }
 d_log_g_yi <- sapply(y, function(t){ # evaluating d_\beta log(g) on the bkg data
   return(
@@ -191,7 +191,7 @@ d_S0 <- function(t){
   g <- g(t)
   d_log_g <- d_log_g(t)
   
-  return(-((norm_S^2)*(fs/g)*g*d_log_g + (fs/g-1)*d_normS_sq)/(norm_S^4))
+  return(-((norm_S^2)*(fs/g)*d_log_g + (fs/g-1)*d_normS_sq)/(norm_S^4))
 }
 d_log_g_yi <- sapply(y, d_log_g)
 d2_log_g_yi <- sapply(y, d2_log_g)
