@@ -12,6 +12,7 @@ rm(list = ls())
 ####################### Loading the required packages ##########################
 library(VGAM)
 library(truncdist)
+library(kableExtra)
 ################################################################################
 
 # Loading the data and transforming into log-scale
@@ -28,24 +29,24 @@ mean_sig <- 3.5; sd_sig <- sqrt(0.01*3.5^2)
 eps <- 1e-3 # mass outside the signal region
 
 # SIGNAL DENSITY:
-fs <- function(x, mean = mean_sig, sd = sd_sig)
+fs <- function(x)
 {
   return(dtrunc(exp(x), spec = 'norm', a = real_l, b = real_u,
-                mean = mean, sd = sd)*exp(x))
+                mean = mean_sig, sd = sd_sig)*exp(x))
 }
 
 # SIGNAL CDF:
-Fs <- function(x, mean = mean_sig, sd = sd_sig)
+Fs <- function(x)
 {
   return(ptrunc(exp(x), spec = 'norm', a = real_l, b = real_u,
-                mean = mean, sd = sd))
+                mean = mean_sig, sd = sd_sig))
 }
 
 # Finding the signal region around log(mean_sig) with mass 1-eps:
 find_d <- function(d)
 {
-  pl <- Fs(log(mean_sig)-d, mean = mean_sig, sd = sd_sig)
-  pu <- Fs(log(mean_sig)+d, mean = mean_sig, sd = sd_sig)
+  pl <- Fs(log(mean_sig)-d)
+  pu <- Fs(log(mean_sig)+d)
   return(pu-pl-1+eps)
 }
 
