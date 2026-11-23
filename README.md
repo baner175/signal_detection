@@ -1,8 +1,8 @@
 # signal_detection
 
-R code and numerical results for **compensator-based signal detection under an unknown background**.
+R code and numerical results for **compensator-based signal detection under an unknown background**. [Find the paper here](https://arxiv.org/abs/2605.20508)
 
-The project studies statistical tests and estimators for a small signal component in physics data. The methods use a proposal background density and a compensator-type statistic to estimate and test the signal fraction. Included scripts cover numerical simulations, power studies, generated figures, and an analysis of Fermi-LAT-style data.
+The project studies statistical tests and estimators for detecting a signal component in physics data. The methods use a proposal background density and estimates the compensator statistic to estimate and test the signal fraction. Included scripts cover numerical simulations, power studies, generated figures, and an analysis of Fermi-LAT data mimics $\gamma$-ray emission from a mixture of dark matter annihilation (the signal of interest) and the astrophysical background.
 
 ## Method overview
 
