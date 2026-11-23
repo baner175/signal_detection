@@ -14,10 +14,10 @@ $$
 
 where:
 
-- `eta` is the signal fraction.
-- `F_s` is the known or specified signal distribution.
-- `F_b` is the unknown background distribution.
-- `g_beta` is a proposal background distribution.
+- $\eta$ is the signal fraction.
+- $f_s$ is the density of the known or specified signal distribution.
+- $f_b$ is the density of the unknown background distribution.
+- $g$ or $g_\beta$ is a proposal background density which is either fully specified or has a parametric form, respectively.
 
 The scripts compare proposal backgrounds and estimate the signal fraction and test statistic in simulation and data-analysis settings.
 
@@ -48,14 +48,15 @@ The project requires R and the following packages:
 - `parallel`
 - `foreach`
 - `knitr` (used to format the Fermi-LAT results)
+- `latex2exp` (used for plotting purposes)
 
 Install the commonly needed packages from R:
 
 ```r
-install.packages(c("truncdist", "VGAM", "doSNOW", "foreach", "knitr"))
+install.packages(c("truncdist", "VGAM", "doSNOW", "foreach", "knitr", "latex2exp"))
 ```
 
-Some scripts use 8 worker processes by default. Adjust `makeCluster(8)` in `Numerical_example_Sec2.1.R` to match the available cores.
+Some scripts use 8 worker processes by default. Adjust `makeCluster(8)` to match the available cores.
 
 ## Running the simulations
 
@@ -91,7 +92,7 @@ Rscript Fermi_LAT_Analysis_wbkg.R
 Rscript Fermi_LAT_Analysis_wobkg.R
 ```
 
-The `wbkg` scripts include a background-only sample, while the `wobkg` scripts estimate the background from the physics sample and proposal models.
+The `wbkg` script include a background-only sample, while the `wobkg` script performs the proposed sensitivity analysis and runs a conservative test.
 
 ## Reproducing figures
 
